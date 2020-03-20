@@ -20,6 +20,7 @@ public class SmartDispenserBehaviorRegistration {
 		if(ConfigData.SERVER.dispensersPlayRecords.get()) registerPlayRecordBehaviors();
 		if(ConfigData.SERVER.dispensersApplyNametags.get()) registerApplyNametagBehavior();
 		if(ConfigData.SERVER.dispensersEquipSaddles.get()) registerEquipSaddleBehavior();
+		if(ConfigData.SERVER.dispensersPlantSaplings.get()) registerPlantSaplingBehaviors();
 	}
 
 	private static void registerUseHoeBehaviors() {
@@ -64,6 +65,17 @@ public class SmartDispenserBehaviorRegistration {
 
 	private static void registerEquipSaddleBehavior() {
 		register(Items.SADDLE, new EquipSaddleDispenserBehavior());
+	}
+
+	private static void registerPlantSaplingBehaviors() {
+		for(Item item : ForgeRegistries.ITEMS) {
+			if(item instanceof BlockItem) {
+				Block block = ((BlockItem) item).getBlock();
+				if(block instanceof SaplingBlock) {
+					register(item, new PlantSaplingBehavior());
+				}
+			}
+		}
 	}
 
 }

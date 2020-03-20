@@ -22,6 +22,7 @@ public class ConfigData {
 		public final ForgeConfigSpec.BooleanValue dispensersApplyNametags;
 		public final ForgeConfigSpec.BooleanValue dispensersConsumeNametags;
 		public final ForgeConfigSpec.BooleanValue dispensersEquipSaddles;
+		public final ForgeConfigSpec.BooleanValue dispensersPlantSaplings;
 
 		public ServerConfig(ForgeConfigSpec.Builder builder) {
 			builder.push("DispenserBehaviors");
@@ -46,6 +47,9 @@ public class ConfigData {
 			dispensersEquipSaddles = builder
 					.comment("Can dispensers put saddles onto pigs and tamed horses?")
 					.define("dispensersEquipSaddles", true);
+			dispensersPlantSaplings = builder
+					.comment("Can dispensers plant saplings in front of them?")
+					.define("dispensersPlantSaplings", true);
 			builder.pop();
 		}
 	}
