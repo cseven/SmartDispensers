@@ -36,7 +36,7 @@ public class PlayRecordDispenserBehavior implements IDispenseItemBehavior {
 		}
 
 		JukeboxBlock jukebox = (JukeboxBlock)block;
-		jukebox.func_225533_a_(jukeboxState, world, forwardPos, fakePlayer, null, null);
+		jukebox.onBlockActivated(jukeboxState, world, forwardPos, fakePlayer, null, null);
 		jukebox.insertRecord(world, forwardPos, jukeboxState, itemStack);
 		world.playEvent(null, 1010, forwardPos, Item.getIdFromItem(itemStack.getItem()));
 		itemStack.shrink(1);

@@ -33,12 +33,13 @@ public class EquipSaddleDispenserBehavior implements IDispenseItemBehavior {
 		List<LivingEntity> targetEntities = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(forwardPos));
 
 		for(LivingEntity target : targetEntities) {
-			if(itemStack.interactWithEntity(fakePlayer, target, fakePlayer.getActiveHand())) {
+			if(itemStack.interactWithEntity(fakePlayer, target, fakePlayer.getActiveHand()).isSuccess()) {
 				return itemStack;
 			} else if(target instanceof AbstractHorseEntity) {
 				AbstractHorseEntity horseTarget = (AbstractHorseEntity)target;
 				if(!horseTarget.isHorseSaddled() && horseTarget.isTame()) {
-					(horseTarget).setHorseSaddled(true);
+					// Saddle up the horse
+					horseTarget.func_230266_a_(null);
 					itemStack.shrink(1);
 					return itemStack;
 				}
