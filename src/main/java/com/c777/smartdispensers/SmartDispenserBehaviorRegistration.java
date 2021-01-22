@@ -7,10 +7,33 @@ import net.minecraft.item.*;
 import net.minecraft.util.IItemProvider;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class SmartDispenserBehaviorRegistration {
+
+	private static HashMap<IItemProvider, ArrayList<IDispenseItemBehavior>> cachedBehaviors = new HashMap<>();
 
 	private static void register(IItemProvider provider, IDispenseItemBehavior behavior) {
 		DispenserBlock.registerDispenseBehavior(provider, behavior);
+	}
+
+	private static void registerCachedBehaviors() {
+		for(IItemProvider provider : cachedBehaviors.keySet()) {
+			ArrayList<IDispenseItemBehavior> behaviors = cachedBehaviors.get(provider);
+			if(behaviors.size() == 1) {
+				register(provider, behaviors.get(0));
+			} else {
+				register(provider, new MultiDispenserBehavior(behaviors.toArray(new IDispenseItemBehavior[]{})));
+			}
+		}
+	}
+
+	private static void cacheBehavior(IItemProvider provider, IDispenseItemBehavior behavior) {
+		if(!cachedBehaviors.containsKey(provider)) {
+			cachedBehaviors.put(provider, new ArrayList<>());
+		}
+		cachedBehaviors.get(provider).add(behavior);
 	}
 
 	public static void registerSmartDispenserBehaviors() {
@@ -22,12 +45,15 @@ public class SmartDispenserBehaviorRegistration {
 		if (ConfigData.SERVER.dispensersEquipSaddles.get()) registerEquipSaddleBehavior();
 		if (ConfigData.SERVER.dispensersPlantSaplings.get()) registerPlantSaplingBehaviors();
 		if (ConfigData.SERVER.dispensersDyeSheep.get()) registerDyeSheepBehaviors();
+		if (ConfigData.SERVER.dispensersBreedAnimals.get()) registerBreedAnimalsBehaviors();
+
+		registerCachedBehaviors();
 	}
 
 	private static void registerUseHoeBehaviors() {
 		for(Item item : ForgeRegistries.ITEMS) {
 			if(item instanceof HoeItem) {
-				register(item, new UseHoeDispenserBehavior());
+				cacheBehavior(item, new UseHoeDispenserBehavior());
 			}
 		}
 	}
@@ -38,7 +64,7 @@ public class SmartDispenserBehaviorRegistration {
 				Block block = ((BlockItem) item).getBlock();
 				if(block instanceof CropsBlock || block instanceof StemBlock || block instanceof NetherWartBlock
 				|| block instanceof CocoaBlock) {
-					register(item, new PlantSeedsDispenserBehavior());
+					cacheBehavior(item, new PlantSeedsDispenserBehavior());
 				}
 			}
 		}
@@ -47,7 +73,7 @@ public class SmartDispenserBehaviorRegistration {
 	private static void registerSwingSwordBehaviors() {
 		for(Item item : ForgeRegistries.ITEMS) {
 			if(item instanceof SwordItem) {
-				register(item, new SwingSwordDispenserBehavior());
+				cacheBehavior(item, new SwingSwordDispenserBehavior());
 			}
 		}
 	}
@@ -55,17 +81,17 @@ public class SmartDispenserBehaviorRegistration {
 	private static void registerPlayRecordBehaviors() {
 		for(Item item : ForgeRegistries.ITEMS) {
 			if(item instanceof MusicDiscItem) {
-				register(item, new PlayRecordDispenserBehavior());
+				cacheBehavior(item, new PlayRecordDispenserBehavior());
 			}
 		}
 	}
 
 	private static void registerApplyNametagBehavior() {
-		register(Items.NAME_TAG, new ApplyNametagDispenserBehavior(ConfigData.SERVER.dispensersConsumeNametags.get()));
+		cacheBehavior(Items.NAME_TAG, new ApplyNametagDispenserBehavior(ConfigData.SERVER.dispensersConsumeNametags.get()));
 	}
 
 	private static void registerEquipSaddleBehavior() {
-		register(Items.SADDLE, new EquipSaddleDispenserBehavior());
+		cacheBehavior(Items.SADDLE, new EquipSaddleDispenserBehavior());
 	}
 
 	private static void registerPlantSaplingBehaviors() {
@@ -73,7 +99,7 @@ public class SmartDispenserBehaviorRegistration {
 			if(item instanceof BlockItem) {
 				Block block = ((BlockItem) item).getBlock();
 				if(block instanceof SaplingBlock) {
-					register(item, new PlantSaplingBehavior());
+					cacheBehavior(item, new PlantSaplingBehavior());
 				}
 			}
 		}
@@ -82,7 +108,15 @@ public class SmartDispenserBehaviorRegistration {
 	private static void registerDyeSheepBehaviors() {
 		for(Item item : ForgeRegistries.ITEMS) {
 			if(item instanceof DyeItem) {
-				register(item, new DyeSheepDispenserBehavior());
+				cacheBehavior(item, new DyeSheepDispenserBehavior());
+			}
+		}
+	}
+
+	private static void registerBreedAnimalsBehaviors() {
+		for(Item item : ForgeRegistries.ITEMS) {
+			if(BreedAnimalsDispenserBehavior.BREEDING_ITEMS.contains(item)) {
+				cacheBehavior(item, new BreedAnimalsDispenserBehavior());
 			}
 		}
 	}

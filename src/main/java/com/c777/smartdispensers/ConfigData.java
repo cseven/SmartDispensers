@@ -24,6 +24,7 @@ public class ConfigData {
 		public final ForgeConfigSpec.BooleanValue dispensersEquipSaddles;
 		public final ForgeConfigSpec.BooleanValue dispensersPlantSaplings;
 		public final ForgeConfigSpec.BooleanValue dispensersDyeSheep;
+		public final ForgeConfigSpec.BooleanValue dispensersBreedAnimals;
 
 		public ServerConfig(ForgeConfigSpec.Builder builder) {
 			builder.push("DispenserBehaviors");
@@ -54,6 +55,9 @@ public class ConfigData {
 			dispensersDyeSheep = builder
 					.comment("Can dispensers dye sheep in front of them?")
 					.define("dispensersDyeSheep", true);
+			dispensersBreedAnimals = builder
+					.comment("Can dispensers breed animals in front of them?")
+					.define("dispensersBreedAnimals", true);
 			builder.pop();
 		}
 	}
