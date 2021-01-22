@@ -6,6 +6,7 @@ import net.minecraft.dispenser.IDispenseItemBehavior;
 import net.minecraft.item.*;
 import net.minecraft.util.IItemProvider;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +37,7 @@ public class SmartDispenserBehaviorRegistration {
 		cachedBehaviors.get(provider).add(behavior);
 	}
 
-	public static void registerSmartDispenserBehaviors() {
+	public static void registerSmartDispenserBehaviors(Logger logger) {
 		if (ConfigData.SERVER.dispensersTillDirt.get()) registerUseHoeBehaviors();
 		if (ConfigData.SERVER.dispensersPlantSeeds.get()) registerPlantSeedBehaviors();
 		if (ConfigData.SERVER.dispensersSwingSwords.get()) registerSwingSwordBehaviors();
@@ -48,6 +49,7 @@ public class SmartDispenserBehaviorRegistration {
 		if (ConfigData.SERVER.dispensersBreedAnimals.get()) registerBreedAnimalsBehaviors();
 
 		registerCachedBehaviors();
+		logger.info("Registered dispenser behaviors for " + cachedBehaviors.keySet().size() + " items.");
 	}
 
 	private static void registerUseHoeBehaviors() {

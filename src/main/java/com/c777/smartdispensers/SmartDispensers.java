@@ -29,7 +29,7 @@ public class SmartDispensers
     private void setup(final FMLCommonSetupEvent event)
     {
         // some preinit code
-        SmartDispenserBehaviorRegistration.registerSmartDispenserBehaviors();
+        SmartDispenserBehaviorRegistration.registerSmartDispenserBehaviors(LOGGER);
     }
 
 }
